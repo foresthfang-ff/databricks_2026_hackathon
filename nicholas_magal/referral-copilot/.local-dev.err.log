@@ -1,0 +1,24 @@
+error: password authentication failed for user 'forest.h.fang@gmail.com'
+    at C:\Users\Hfang\OneDrive - Niagara Bottling, LLC\Documents\hackathon_dbx\health-access-explorer\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async setupReferralRoutes (C:\Users\Hfang\OneDrive - Niagara Bottling, LLC\Documents\hackathon_dbx\health-access-explorer\server\routes\referral-routes.ts:124:3)
+    at async Object.onPluginsReady (C:\Users\Hfang\OneDrive - Niagara Bottling, LLC\Documents\hackathon_dbx\health-access-explorer\server\server.ts:16:5)
+    at async AppKit._createApp (C:\Users\Hfang\OneDrive - Niagara Bottling, LLC\Documents\hackathon_dbx\health-access-explorer\node_modules\@databricks\appkit\src\core\appkit.ts:226:7) {
+  length: 86,
+  severity: 'ERROR',
+  code: '28P01',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: undefined,
+  line: undefined,
+  routine: undefined
+}
