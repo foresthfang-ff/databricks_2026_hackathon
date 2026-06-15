@@ -1,0 +1,39 @@
+bundle:
+  name: general-chatbot
+
+variables:
+  warehouse_id:
+    description: SQL Warehouse ID
+  serving_endpoint_name:
+    description: Serving endpoint name
+
+resources:
+  apps:
+    app:
+      name: "general-chatbot"
+      description: "General Databricks LLM chatbot"
+      source_code_path: ./
+      user_api_scopes:
+        - sql
+        - serving.serving-endpoints
+
+      # The resources which this app has access to.
+      resources:
+        - name: sql-warehouse
+          sql_warehouse:
+            id: ${var.warehouse_id}
+            permission: CAN_USE
+        - name: serving-endpoint
+          serving_endpoint:
+            name: ${var.serving_endpoint_name}
+            permission: CAN_QUERY
+
+targets:
+  default:
+    default: true
+    workspace:
+      host: https://dbc-23f8f625-632f.cloud.databricks.com
+
+    variables:
+      warehouse_id: 57f2d24b9a91fb7f
+      serving_endpoint_name: databricks-meta-llama-3-1-8b-instruct

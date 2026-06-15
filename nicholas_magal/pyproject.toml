@@ -1,0 +1,11 @@
+[project]
+name = "databricks-2026-hackathon"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "databricks-sdk>=0.117.0",
+    "databricks-sql-connector>=4.3.0",
+    "pandas>=3.0.3",
+]
