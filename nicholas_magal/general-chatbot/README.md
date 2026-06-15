@@ -1,16 +1,8 @@
-# general-chatbot
+# Facility Chatbot
 
-A Databricks AppKit app that provides a healthcare facility chatbot grounded only in Unity Catalog facility tables and backed by a Databricks Model Serving chat endpoint.
+Facility Chatbot is a Databricks AppKit application for asking natural-language questions about healthcare facilities in India. Every chat turn is grounded in Unity Catalog facility tables before the LLM responds; the app does not answer from general model knowledge alone.
 
-## Enabled Plugins
-
-- **Server**: Express HTTP server with static file serving and Vite dev mode
-- **Analytics**: Read-only SQL grounding queries against a Databricks SQL warehouse
-- **Serving**: Authenticated proxy to Databricks Model Serving
-
-The default bundle target points at `https://dbc-23f8f625-632f.cloud.databricks.com`, uses warehouse `57f2d24b9a91fb7f`, and uses the ready endpoint `databricks-meta-llama-3-1-8b-instruct`.
-
-Grounding reads these tables through `config/queries/facility_grounding.sql`:
+The app uses AppKit Analytics to retrieve compact facility context from:
 
 - `medallion_architecture.gold.gold_facility`
 - `medallion_architecture.gold.gold_facility_contact`
@@ -18,50 +10,12 @@ Grounding reads these tables through `config/queries/facility_grounding.sql`:
 - `medallion_architecture.gold.gold_facility_procedure`
 - `medallion_architecture.gold.gold_facility_specialty`
 
-## Local Development
+The grounding query joins facility identity, location, contact, procedure, and specialty evidence by `facility_id`, ranks matching rows against the user question, and sends only the top compact results to the configured Databricks Model Serving endpoint. The assistant then cites facility names, relevant specialties or procedures, locations, contact details, and confidence/evidence signals when available.
 
-Install dependencies:
+This app is intended for exploratory facility lookup: finding hospitals by specialty, procedure, geography, or contact information, and summarizing what the available facility evidence supports. If no matching rows are found, the chatbot asks the user to refine the facility name, location, specialty, or procedure rather than inventing an answer.
 
-```bash
-npm install
-```
+Core implementation files:
 
-For local serving calls, create `general-chatbot/.env` with:
-
-```env
-DATABRICKS_HOST=https://dbc-23f8f625-632f.cloud.databricks.com
-DATABRICKS_WAREHOUSE_ID=57f2d24b9a91fb7f
-DATABRICKS_SERVING_ENDPOINT_NAME=databricks-meta-llama-3-1-8b-instruct
-DATABRICKS_APP_PORT=8000
-```
-
-Then run:
-
-```bash
-npm run dev
-```
-
-## Validation
-
-```bash
-npm run typecheck
-npm run lint
-npm run test:smoke
-databricks apps validate --profile dbc-23f8f625-632f
-```
-
-## Deployment
-
-Deploying changes a Databricks workspace app, so confirm the target before running:
-
-```bash
-databricks apps deploy --profile dbc-23f8f625-632f
-```
-
-## Key Files
-
-- `client/src/App.tsx`: chatbot UI and AppKit serving hook usage
-- `config/queries/facility_grounding.sql`: compact facility retrieval query
-- `server/server.ts`: AppKit server with the serving plugin
-- `databricks.yml`: app resource declarations and warehouse/endpoint permissions
-- `app.yaml`: runtime injection for warehouse and serving endpoint names
+- `client/src/App.tsx` for the chat experience
+- `config/queries/facility_grounding.sql` for table grounding
+- `server/server.ts` for AppKit Analytics and Serving plugins
